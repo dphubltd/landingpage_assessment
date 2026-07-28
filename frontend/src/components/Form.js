@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
+import { VerifiedIcon } from "lucide-react";
 
 const UploadIcon = () => (
   <svg
@@ -190,7 +191,14 @@ function FileUpload({ label, accept, multiple, onChange, values }) {
   );
 }
 
-function DynamicList({ items = [], onAdd, onRemove, onChange, label, emptyText }) {
+function DynamicList({
+  items = [],
+  onAdd,
+  onRemove,
+  onChange,
+  label,
+  emptyText,
+}) {
   return (
     <div>
       <div className="flex items-center justify-between mb-3">
@@ -1414,7 +1422,6 @@ export default function Form() {
                     />
                   </div>
                   <div className="grid grid-cols-1 sm:grid-cols-1 gap-3 mt-3">
-
                     <FileUpload
                       label="Product Image"
                       accept="image/*"
@@ -2212,26 +2219,12 @@ export default function Form() {
     }
   };
 
-  if (submitted) {
+  if (!submitted) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-grid px-4">
         <div className="text-center max-w-lg animate-slide-up">
           <div className="success-check">
-            <svg
-              className="w-8 h-8 text-white"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2.5}
-                d="M5 13l4 4L19 7"
-                strokeDasharray="24"
-                strokeDashoffset="24"
-              />
-            </svg>
+            <VerifiedIcon className="w-12 h-12 text-main" />
           </div>
           <h2 className="text-3xl font-heading font-semibold text-main mb-3 animate-fade-in">
             Submission Received
