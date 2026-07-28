@@ -31,7 +31,7 @@ export default function AdminLogin() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-grid px-4">
-      <div className="w-full max-w-md">
+      <div className="w-full max-w-md px-4">
         <div className="section-card p-8 sm:p-10">
           <div className="text-center mb-8">
             <div className="w-16 h-16 rounded-full bg-main flex items-center justify-center mx-auto mb-4">
