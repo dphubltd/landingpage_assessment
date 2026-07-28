@@ -67,8 +67,9 @@ let PORT = Number(process.env.PORT) || 5000;
 const allowedOrigins = [
   "http://localhost:3000",
   "http://localhost:8000",
-  "https://assetcollectionleadpath.vercel.app",
+  "https://assetchecklistleadpathgroup.vercel.app/",
   "https://landingpage-assessment.vercel.app",
+  "https://landingpage-assessment.onrender.com",
   ...(process.env.FRONTEND_URL ? [process.env.FRONTEND_URL] : []),
 ];
 
