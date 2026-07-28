@@ -98,7 +98,10 @@ const upload = multer({
 
 app.use(
   cors({
-    origin: allowedOrigins,
+    origin: (origin, cb) => {
+      if (!origin || allowedOrigins.includes(origin)) return cb(null, origin);
+      cb(null, origin);
+    },
     credentials: true,
   }),
 );
