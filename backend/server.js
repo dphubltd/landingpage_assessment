@@ -5,7 +5,11 @@ const cors = require("cors");
 const session = require("express-session");
 const multer = require("multer");
 const multerS3 = require("multer-s3");
-const { S3Client, GetObjectCommand, DeleteObjectCommand } = require("@aws-sdk/client-s3");
+const {
+  S3Client,
+  GetObjectCommand,
+  DeleteObjectCommand,
+} = require("@aws-sdk/client-s3");
 const { v4: uuidv4 } = require("uuid");
 const nodemailer = require("nodemailer");
 const { db, initDb } = require("./db");
@@ -23,11 +27,22 @@ const transporter = nodemailer.createTransport({
 async function sendSubmissionEmail(formData, filesData) {
   const brand = formData.brandName || formData.customerName || "Submission";
   const fields = Object.entries(formData)
-    .filter(([, v]) => v !== null && v !== undefined && v !== "" && !(Array.isArray(v) && v.length === 0))
-    .map(([k, v]) => `<tr><td style="padding:6px 12px;border:1px solid #e2e8f0;font-size:13px;font-weight:600;background:#f8fafb;white-space:nowrap;vertical-align:top">${k}</td><td style="padding:6px 12px;border:1px solid #e2e8f0;font-size:13px">${Array.isArray(v) ? JSON.stringify(v) : String(v)}</td></tr>`)
+    .filter(
+      ([, v]) =>
+        v !== null &&
+        v !== undefined &&
+        v !== "" &&
+        !(Array.isArray(v) && v.length === 0),
+    )
+    .map(
+      ([k, v]) =>
+        `<tr><td style="padding:6px 12px;border:1px solid #e2e8f0;font-size:13px;font-weight:600;background:#f8fafb;white-space:nowrap;vertical-align:top">${k}</td><td style="padding:6px 12px;border:1px solid #e2e8f0;font-size:13px">${Array.isArray(v) ? JSON.stringify(v) : String(v)}</td></tr>`,
+    )
     .join("");
 
-  const files = filesData.map((f) => `• ${f.originalName} (${(f.size / 1024).toFixed(1)} KB)`).join("<br>");
+  const files = filesData
+    .map((f) => `• ${f.originalName} (${(f.size / 1024).toFixed(1)} KB)`)
+    .join("<br>");
 
   await transporter.sendMail({
     from: process.env.SMTP_USER,
@@ -49,7 +64,13 @@ async function sendSubmissionEmail(formData, filesData) {
 const app = express();
 let PORT = Number(process.env.PORT) || 5000;
 
-const allowedOrigins = [process.env.FRONTEND_URL || "http://localhost:3000"];
+const allowedOrigins = [
+  "http://localhost:3000",
+  "http://localhost:8000",
+  "https://assetcollectionleadpath.vercel.app",
+  "https://landingpage-assessment.vercel.app",
+  ...(process.env.FRONTEND_URL ? [process.env.FRONTEND_URL] : []),
+];
 
 const s3 = new S3Client({
   endpoint: process.env.WASABI_ENDPOINT,
