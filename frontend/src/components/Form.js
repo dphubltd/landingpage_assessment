@@ -95,7 +95,7 @@ function FileUpload({ label, accept, multiple, onChange, values }) {
           e.preventDefault();
           setDrag(true);
         }}
-        onDragLeave={() => setDrag(false)}
+        onDragLnpmeave={() => setDrag(false)}
         onDrop={handleDrop}
         onClick={() => ref.current?.click()}
       >
@@ -348,22 +348,22 @@ function TextInput({
 const SECTION_CONFIGS = [
   {
     id: "section-1",
-    title: "Brand & Visual Assets",
+    title: "Business Name",
     tag: "01",
   },
   {
     id: "section-2",
-    title: "Strategic Header & Hero Section",
+    title: "Header Section",
     tag: "02",
   },
   {
     id: "section-3",
-    title: "Business Overview & Feature Architecture",
+    title: "Business Overview ",
     tag: "03",
   },
   {
     id: "section-4",
-    title: "About Us Core Content",
+    title: "About Us ",
     tag: "04",
   },
   {
@@ -378,12 +378,12 @@ const SECTION_CONFIGS = [
   },
   {
     id: "section-7",
-    title: "Team & Leadership Roster",
+    title: "Team & Leadership Roles",
     tag: "07",
   },
   {
     id: "section-8",
-    title: "Social Proof, Trust Signals & Media",
+    title: "Social Proofs",
     tag: "08",
   },
   {
@@ -560,8 +560,8 @@ export default function Form() {
         "appIcon",
       ]) ||
       check([
-        "primaryAccent",
-        "secondaryAccent",
+        "primaryColor",
+        "secondaryColor",
         "neutralBg",
         "textColor",
         "headingFont",
@@ -839,12 +839,12 @@ export default function Form() {
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                 <ColorInput
-                  label="Primary Accent"
+                  label="Primary Color"
                   value={data.primaryAccent}
                   onChange={update("primaryAccent")}
                 />
                 <ColorInput
-                  label="Secondary Accent"
+                  label="Secondary Color"
                   value={data.secondaryAccent}
                   onChange={update("secondaryAccent")}
                 />
@@ -910,7 +910,7 @@ export default function Form() {
             <div>
               <div className="flex items-center justify-between mb-4">
                 <h3 className="font-heading font-semibold text-main text-lg flex items-center gap-2">
-                  High-Vibrancy Media Assets
+                  Business Pictures
                 </h3>
                 <button
                   type="button"
