@@ -17,7 +17,7 @@ const { db, initDb } = require("./db");
 const transporter = nodemailer.createTransport({
   host: process.env.SMTP_HOST,
   port: Number(process.env.SMTP_PORT) || 465,
-  secure: true,
+  secure: process.env.SMTP_SECURE === "true",
   auth: {
     user: process.env.SMTP_USER,
     pass: process.env.SMTP_PASS,
@@ -45,7 +45,7 @@ async function sendSubmissionEmail(formData, filesData) {
     .join("<br>");
 
   await transporter.sendMail({
-    from: process.env.SMTP_USER,
+    from: `"${process.env.NEWSLETTER_FROM_NAME || "Leadpath"}" <${process.env.NEWSLETTER_FROM_EMAIL || process.env.SMTP_USER}>`,
     to: process.env.RECEIVER_EMAIL,
     subject: `New Asset Collection Submission — ${brand}`,
     html: `
