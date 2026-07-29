@@ -2257,7 +2257,7 @@ export default function Form() {
         <div className="max-w-7xl mx-auto px-4 sm:px-4 py-5 sm:py-6 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <img
-              src="/logo.svg"
+              src="/logo.png"
               alt="Brand logo"
               className="h-8 sm:h-10 w-auto"
             />
