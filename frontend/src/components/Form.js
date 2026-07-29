@@ -2219,7 +2219,7 @@ export default function Form() {
     }
   };
 
-  if (!submitted) {
+  if (submitted) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-grid px-4">
         <div className="text-center max-w-lg animate-slide-up">
