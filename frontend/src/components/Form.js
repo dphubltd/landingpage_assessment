@@ -95,7 +95,7 @@ function FileUpload({ label, accept, multiple, onChange, values }) {
           e.preventDefault();
           setDrag(true);
         }}
-        onDragLnpmeave={() => setDrag(false)}
+        onDragLeave={() => setDrag(false)}
         onDrop={handleDrop}
         onClick={() => ref.current?.click()}
       >
@@ -169,7 +169,7 @@ function FileUpload({ label, accept, multiple, onChange, values }) {
                     d="M12 6v6m0 0v6m0-6h6m-6 0H6"
                   />
                 </svg>
-                Click to add more files
+                Add more files
               </span>
             )}
           </div>
@@ -179,10 +179,10 @@ function FileUpload({ label, accept, multiple, onChange, values }) {
               <UploadIcon />
             </div>
             <p className="text-sm text-[#1a1a2e] font-medium">
-              Drop files here or click to browse
+              Drop files or click to upload
             </p>
             <p className="text-xs text-[#94a3b8] mt-1">
-              {accept ? `Accepts: ${accept}` : "All files accepted"}
+              {accept ? `${accept}` : "All file types"}
             </p>
           </div>
         )}
@@ -358,27 +358,27 @@ const SECTION_CONFIGS = [
   },
   {
     id: "section-3",
-    title: "Business Overview ",
+    title: "Business Overview",
     tag: "03",
   },
   {
     id: "section-4",
-    title: "About Us ",
+    title: "About Us",
     tag: "04",
   },
   {
     id: "section-5",
-    title: "Products & Services Matrix",
+    title: "Products & Services",
     tag: "05",
   },
   {
     id: "section-6",
-    title: "Newsletter Subscription & Preferences",
+    title: "Newsletter & Preferences",
     tag: "06",
   },
   {
     id: "section-7",
-    title: "Team & Leadership Roles",
+    title: "Team & Roles",
     tag: "07",
   },
   {
@@ -388,12 +388,12 @@ const SECTION_CONFIGS = [
   },
   {
     id: "section-9",
-    title: "Extended FAQ Engine",
+    title: "FAQs",
     tag: "09",
   },
   {
     id: "section-10",
-    title: "Contact Information & Location",
+    title: "Contact & Location",
     tag: "10",
   },
   {
@@ -466,6 +466,9 @@ export default function Form() {
   const [extraColors, setExtraColors] = useState([]);
   const [extraLogos, setExtraLogos] = useState([]);
   const [extraMedia, setExtraMedia] = useState([]);
+  const [hasLogo, setHasLogo] = useState(null);
+  const [wantLogoCreated, setWantLogoCreated] = useState(null);
+  const [colorUploadMode, setColorUploadMode] = useState(false);
   const [activeSection, setActiveSection] = useState(0);
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
@@ -692,7 +695,7 @@ export default function Form() {
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
               <TextInput
-                label="Name of the Customer"
+                label="Customer Name"
                 value={data.customerName}
                 onChange={update("customerName")}
                 placeholder="e.g. John Doe"
@@ -706,115 +709,198 @@ export default function Form() {
             </div>
             <div className="section-divider" />
             <div>
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="font-heading font-semibold text-main text-lg flex items-center gap-2">
-                  Logos & Brand Identity
-                </h3>
-                <button
-                  type="button"
-                  onClick={addLogoSet}
-                  className="btn-ghost btn-small"
-                >
-                  <svg
-                    className="w-4 h-4"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M12 6v6m0 0v6m0-6h6m-6 0H6"
-                    />
-                  </svg>
-                  Add Set
-                </button>
-              </div>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                <FileUpload
-                  label="Transparent Logo (PNG/SVG)"
-                  accept=".png,.svg"
-                  onChange={updateFiles("transparentLogo")}
-                  values={files.transparentLogo}
-                />
-                <FileUpload
-                  label="Non-Transparent Logo (PNG/JPG)"
-                  accept=".png,.jpg,.jpeg"
-                  onChange={updateFiles("nonTransparentLogo")}
-                  values={files.nonTransparentLogo}
-                />
-                <FileUpload
-                  label="Favicon (32x32px SVG)"
-                  accept=".svg,.ico,.png"
-                  onChange={updateFiles("favicon")}
-                  values={files.favicon}
-                />
-                <FileUpload
-                  label="White/Dark Mode (180x180px)(optional)"
-                  accept=".png"
-                  onChange={updateFiles("appIcon")}
-                  values={files.appIcon}
-                />
-              </div>
-              {extraLogos.map((_, i) => (
-                <div
-                  key={i}
-                  className="mt-6 p-4 border border-[rgba(0,58,71,0.08)] rounded-lg bg-[#f8fafb] relative animate-fade-in"
-                >
-                  <button
-                    type="button"
-                    onClick={() => removeLogoSet(i)}
-                    className="absolute top-3 right-3 text-red-400 hover:text-red-600 transition-colors"
-                  >
-                    <svg
-                      className="w-4 h-4"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
+              <h3 className="font-heading font-semibold text-main text-lg flex items-center gap-2 mb-4">
+                Logos
+              </h3>
+              {hasLogo === null && (
+                <div className="p-5 rounded-lg bg-[#f8fafb] border border-[rgba(0,58,71,0.08)]">
+                  <p className="text-sm text-[#1a1a2e] font-medium mb-3">
+                    Do you have a logo?
+                  </p>
+                  <div className="flex gap-3">
+                    <button
+                      type="button"
+                      onClick={() => setHasLogo(true)}
+                      className="btn-primary btn-small"
                     >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M6 18L18 6M6 6l12 12"
-                      />
-                    </svg>
-                  </button>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                    <FileUpload
-                      label="Transparent Logo (PNG/SVG)"
-                      accept=".png,.svg"
-                      onChange={updateFiles(`extraLogo_${i}_transparent`)}
-                      values={files[`extraLogo_${i}_transparent`]}
-                    />
-                    <FileUpload
-                      label="Non-Transparent Logo (PNG/JPG)"
-                      accept=".png,.jpg,.jpeg"
-                      onChange={updateFiles(`extraLogo_${i}_nonTransparent`)}
-                      values={files[`extraLogo_${i}_nonTransparent`]}
-                    />
-                    <FileUpload
-                      label="Favicon (32x32px SVG)"
-                      accept=".svg,.ico,.png"
-                      onChange={updateFiles(`extraLogo_${i}_favicon`)}
-                      values={files[`extraLogo_${i}_favicon`]}
-                    />
-                    <FileUpload
-                      label="White/Dark Mode (180x180px)(optional)"
-                      accept=".png"
-                      onChange={updateFiles(`extraLogo_${i}_appIcon`)}
-                      values={files[`extraLogo_${i}_appIcon`]}
-                    />
+                      Yes
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setHasLogo(false)}
+                      className="btn-ghost btn-small"
+                    >
+                      No
+                    </button>
                   </div>
                 </div>
-              ))}
+              )}
+              {hasLogo === true && (
+                <>
+                  <div className="flex items-center justify-between mb-4">
+                    <p className="text-sm text-[#94a3b8]">
+                      Upload your logo files
+                    </p>
+                    <button
+                      type="button"
+                      onClick={() => { setHasLogo(null); setWantLogoCreated(null); }}
+                      className="text-xs text-[#94a3b8] hover:text-main underline"
+                    >
+                      Change answer
+                    </button>
+                  </div>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                    <FileUpload
+                      label="Transparent (PNG/SVG)"
+                      accept=".png,.svg"
+                      onChange={updateFiles("transparentLogo")}
+                      values={files.transparentLogo}
+                    />
+                    <FileUpload
+                      label="Standard Logo (PNG/JPG)"
+                      accept=".png,.jpg,.jpeg"
+                      onChange={updateFiles("nonTransparentLogo")}
+                      values={files.nonTransparentLogo}
+                    />
+                    <FileUpload
+                      label="Favicon (SVG)"
+                      accept=".svg,.ico,.png"
+                      onChange={updateFiles("favicon")}
+                      values={files.favicon}
+                    />
+                    <FileUpload
+                          label="Dark Mode Icon (optional)"
+                      accept=".png"
+                      onChange={updateFiles("appIcon")}
+                      values={files.appIcon}
+                    />
+                  </div>
+                  <div className="mt-4">
+                    <button
+                      type="button"
+                      onClick={addLogoSet}
+                      className="btn-ghost btn-small"
+                    >
+                      <svg
+                        className="w-4 h-4"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M12 6v6m0 0v6m0-6h6m-6 0H6"
+                        />
+                      </svg>
+                      Add Set
+                    </button>
+                  </div>
+                  {extraLogos.map((_, i) => (
+                    <div
+                      key={i}
+                      className="mt-6 p-4 border border-[rgba(0,58,71,0.08)] rounded-lg bg-[#f8fafb] relative animate-fade-in"
+                    >
+                      <button
+                        type="button"
+                        onClick={() => removeLogoSet(i)}
+                        className="absolute top-3 right-3 text-red-400 hover:text-red-600 transition-colors"
+                      >
+                        <svg
+                          className="w-4 h-4"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M6 18L18 6M6 6l12 12"
+                          />
+                        </svg>
+                      </button>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                        <FileUpload
+                          label="Transparent (PNG/SVG)"
+                          accept=".png,.svg"
+                          onChange={updateFiles(`extraLogo_${i}_transparent`)}
+                          values={files[`extraLogo_${i}_transparent`]}
+                        />
+                        <FileUpload
+                          label="Standard Logo (PNG/JPG)"
+                          accept=".png,.jpg,.jpeg"
+                          onChange={updateFiles(`extraLogo_${i}_nonTransparent`)}
+                          values={files[`extraLogo_${i}_nonTransparent`]}
+                        />
+                        <FileUpload
+                          label="Favicon (SVG)"
+                          accept=".svg,.ico,.png"
+                          onChange={updateFiles(`extraLogo_${i}_favicon`)}
+                          values={files[`extraLogo_${i}_favicon`]}
+                        />
+                        <FileUpload
+                      label="Dark Mode Icon (optional)"
+                          accept=".png"
+                          onChange={updateFiles(`extraLogo_${i}_appIcon`)}
+                          values={files[`extraLogo_${i}_appIcon`]}
+                        />
+                      </div>
+                    </div>
+                  ))}
+                </>
+              )}
+              {hasLogo === false && wantLogoCreated === null && (
+                <div className="p-5 rounded-lg bg-[#f8fafb] border border-[rgba(0,58,71,0.08)]">
+                  <p className="text-sm text-[#1a1a2e] font-medium mb-3">
+                    Want us to create a logo?
+                  </p>
+                  <div className="flex gap-3">
+                    <button
+                      type="button"
+                      onClick={() => setWantLogoCreated(true)}
+                      className="btn-primary btn-small"
+                    >
+                      Yes
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setWantLogoCreated(false)}
+                      className="btn-ghost btn-small"
+                    >
+                      No
+                    </button>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setHasLogo(null)}
+                    className="text-xs text-[#94a3b8] hover:text-main underline mt-3"
+                  >
+                    Change answer
+                  </button>
+                </div>
+              )}
+              {hasLogo === false && wantLogoCreated === true && (
+                <div className="p-5 rounded-lg bg-emerald-50 border border-emerald-200">
+                  <p className="text-sm text-emerald-800 font-medium">
+                    We'll create a logo for you.
+                  </p>
+                </div>
+              )}
+              {hasLogo === false && wantLogoCreated === false && (
+                <div className="p-5 rounded-lg bg-[#f8fafb] border border-[rgba(0,58,71,0.08)]">
+                  <p className="text-sm text-[#94a3b8]">
+                    Ok, we'll proceed without one.
+                  </p>
+                </div>
+              )}
             </div>
             <div className="section-divider" />
             <div>
               <div className="flex items-center justify-between mb-4">
                 <h3 className="font-heading font-semibold text-main text-lg flex items-center gap-2">
-                  Color Palette & Design Tokens
+                  Colors & Fonts
                 </h3>
                 <button
                   type="button"
@@ -837,80 +923,113 @@ export default function Form() {
                   Add Color
                 </button>
               </div>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                <ColorInput
-                  label="Primary Color"
-                  value={data.primaryAccent}
-                  onChange={update("primaryAccent")}
-                />
-                <ColorInput
-                  label="Secondary Color"
-                  value={data.secondaryAccent}
-                  onChange={update("secondaryAccent")}
-                />
-                <ColorInput
-                  label="Neutral Backgrounds"
-                  value={data.neutralBg}
-                  onChange={update("neutralBg")}
-                />
-                <ColorInput
-                  label="Text Color"
-                  value={data.textColor}
-                  onChange={update("textColor")}
-                />
+              <div className="mb-4">
+                <label className="check-radio cursor-pointer">
+                  <input
+                    type="radio"
+                    name="colorMode"
+                    checked={!colorUploadMode}
+                    onChange={() => setColorUploadMode(false)}
+                    className="w-4 h-4 accent-[#003a47]"
+                  />
+                  <span className="text-sm text-[#1a1a2e]">I know my color codes</span>
+                </label>
+                <label className="check-radio cursor-pointer mt-2">
+                  <input
+                    type="radio"
+                    name="colorMode"
+                    checked={colorUploadMode}
+                    onChange={() => setColorUploadMode(true)}
+                    className="w-4 h-4 accent-[#003a47]"
+                  />
+                  <span className="text-sm text-[#1a1a2e]">Upload a picture instead</span>
+                </label>
               </div>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mt-4">
-                <TextInput
-                  label="Heading Font Family"
-                  value={data.headingFont}
-                  onChange={update("headingFont")}
-                  placeholder="e.g. Outfit, Syne, Space Grotesk"
+              {colorUploadMode ? (
+                <FileUpload
+                  label="Upload a reference image"
+                  accept="image/*"
+                  onChange={updateFiles("colorReferenceImage")}
+                  values={files.colorReferenceImage}
                 />
-                <TextInput
-                  label="Body Font Family"
-                  value={data.bodyFont}
-                  onChange={update("bodyFont")}
-                  placeholder="e.g. Inter, DM Sans"
-                />
-              </div>
-              {extraColors.length > 0 && (
-                <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                  {extraColors.map((c, i) => (
-                    <div key={i} className="relative animate-fade-in">
-                      <button
-                        type="button"
-                        onClick={() => removeExtraColor(i)}
-                        className="absolute -top-2 -right-2 z-10 w-5 h-5 bg-red-400 hover:bg-red-600 text-white rounded-full flex items-center justify-center transition-colors"
-                      >
-                        <svg
-                          className="w-3 h-3"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M6 18L18 6M6 6l12 12"
+              ) : (
+                <>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                    <ColorInput
+                      label="Primary Color"
+                      value={data.primaryAccent}
+                      onChange={update("primaryAccent")}
+                    />
+                    <ColorInput
+                      label="Secondary Color"
+                      value={data.secondaryAccent}
+                      onChange={update("secondaryAccent")}
+                    />
+                    <ColorInput
+                      label="Neutral BG"
+                      value={data.neutralBg}
+                      onChange={update("neutralBg")}
+                    />
+                    <ColorInput
+                      label="Text Color"
+                      value={data.textColor}
+                      onChange={update("textColor")}
+                    />
+                  </div>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mt-4">
+                    <TextInput
+                      label="Heading Font"
+                      value={data.headingFont}
+                      onChange={update("headingFont")}
+                      placeholder="e.g. Outfit, Syne, Space Grotesk"
+                    />
+                    <TextInput
+                      label="Body Font"
+                      value={data.bodyFont}
+                      onChange={update("bodyFont")}
+                      placeholder="e.g. Inter, DM Sans"
+                    />
+                  </div>
+                  {extraColors.length > 0 && (
+                    <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                      {extraColors.map((c, i) => (
+                        <div key={i} className="relative animate-fade-in">
+                          <button
+                            type="button"
+                            onClick={() => removeExtraColor(i)}
+                            className="absolute -top-2 -right-2 z-10 w-5 h-5 bg-red-400 hover:bg-red-600 text-white rounded-full flex items-center justify-center transition-colors"
+                          >
+                            <svg
+                              className="w-3 h-3"
+                              fill="none"
+                              stroke="currentColor"
+                              viewBox="0 0 24 24"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M6 18L18 6M6 6l12 12"
+                              />
+                            </svg>
+                          </button>
+                          <ColorInput
+                            label={`Custom Color ${i + 1}`}
+                            value={c}
+                            onChange={updateExtraColor(i)}
                           />
-                        </svg>
-                      </button>
-                      <ColorInput
-                        label={`Custom Color ${i + 1}`}
-                        value={c}
-                        onChange={updateExtraColor(i)}
-                      />
+                        </div>
+                      ))}
                     </div>
-                  ))}
-                </div>
+                  )}
+                </>
               )}
             </div>
             <div className="section-divider" />
             <div>
               <div className="flex items-center justify-between mb-4">
                 <h3 className="font-heading font-semibold text-main text-lg flex items-center gap-2">
-                  Business Pictures
+                  Photos
                 </h3>
                 <button
                   type="button"
@@ -935,20 +1054,20 @@ export default function Form() {
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                 <FileUpload
-                  label="Studio Photography"
+                  label="Photos"
                   accept="image/*"
                   multiple
                   onChange={updateFiles("studioPhotos")}
                   values={files.studioPhotos}
                 />
                 <FileUpload
-                  label="Hero Video Background (10-15s MP4/WebM)  (optional)"
+                  label="Hero Video (optional)"
                   accept=".mp4,.webm"
                   onChange={updateFiles("heroVideo")}
                   values={files.heroVideo}
                 />
                 <FileUpload
-                  label="Partner & Client Logos (SVG)"
+                      label="Partner Logos (SVG)"
                   accept=".svg"
                   multiple
                   onChange={updateFiles("partnerLogos")}
@@ -981,7 +1100,7 @@ export default function Form() {
                   </button>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                     <FileUpload
-                      label="Studio Photography"
+                      label="Photos"
                       accept="image/*"
                       multiple
                       onChange={updateFiles(`extraMedia_${i}_photos`)}
@@ -994,7 +1113,7 @@ export default function Form() {
                       values={files[`extraMedia_${i}_video`]}
                     />
                     <FileUpload
-                      label="Partner & Client Logos (SVG)"
+                  label="Partner Logos (SVG)"
                       accept=".svg"
                       multiple
                       onChange={updateFiles(`extraMedia_${i}_logos`)}
@@ -1065,30 +1184,30 @@ export default function Form() {
                     </div>
                   </div>
                 )}
-                emptyText="Add navigation links for the header menu"
+                emptyText="Add header navigation links"
               />
             </div>
             <div className="grid grid-cols-1 gap-6 mb-6">
               <TextInput
-                label="Hero Headline (8-12 words)"
+                label="Hero Headline"
                 value={data.heroHeadline}
                 onChange={update("heroHeadline")}
-                placeholder="Sharp, high-converting value proposition"
+                placeholder="e.g. Your main value proposition"
                 multiline
                 rows={2}
               />
               <TextInput
-                label="Subheadline (15-30 words)"
+                label="Subheadline"
                 value={data.heroSubheadline}
                 onChange={update("heroSubheadline")}
-                placeholder="Clear explanation of features and audience benefits"
+                placeholder="e.g. Key features and benefits"
                 multiline
                 rows={3}
               />
             </div>
             <div className="section-divider" />
             <h3 className="font-heading font-semibold text-main mb-4 text-lg flex items-center gap-2">
-              Call to Action Pair
+              Call to Action
             </h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <TextInput
@@ -1110,7 +1229,7 @@ export default function Form() {
                 placeholder='e.g. "Watch Demo"'
               />
               <TextInput
-                label="Secondary CTA Action"
+                label="Secondary Action"
                 value={data.secondaryCtaAction}
                 onChange={update("secondaryCtaAction")}
                 placeholder="e.g. modal trigger, scroll to section"
@@ -1144,16 +1263,16 @@ export default function Form() {
               </div>
             </div>
             <TextInput
-              label="Company Elevator Pitch (2-3 paragraphs) (600-1000) Words and  Above"
+              label="Elevator Pitch"
               value={data.elevatorPitch}
               onChange={update("elevatorPitch")}
-              placeholder="Mission, unique value positioning, and market focus..."
+              placeholder="Business mission and market focus..."
               multiline
               rows={6}
             />
             <div className="section-divider" />
             <DynamicList
-              label="Feature Highlights Grid (3-8 Features)"
+              label="Features"
               items={data.features}
               onAdd={() =>
                 addItem("features", {
@@ -1180,7 +1299,7 @@ export default function Form() {
                     />
                     <input
                       className="field-input"
-                      placeholder="Icon/Graphic Spec"
+                      placeholder="Icon"
                       value={item.icon}
                       onChange={(e) =>
                         updateItem("features")(i, {
@@ -1192,7 +1311,7 @@ export default function Form() {
                   </div>
                   <textarea
                     className="field-textarea mt-3"
-                    placeholder="Short Description (20-40 words)"
+                    placeholder="Short description"
                     rows={2}
                     value={item.description}
                     onChange={(e) =>
@@ -1204,7 +1323,7 @@ export default function Form() {
                   />
                   <input
                     className="field-input mt-3"
-                    placeholder="Key Benefits / Outcome Metric"
+                    placeholder="Key benefits"
                     value={item.benefits}
                     onChange={(e) =>
                       updateItem("features")(i, {
@@ -1215,7 +1334,7 @@ export default function Form() {
                   />
                 </div>
               )}
-              emptyText="Add features to highlight in the grid"
+              emptyText="Add features"
             />
           </div>
         );
@@ -1237,9 +1356,6 @@ export default function Form() {
                   <h2 className="text-2xl sm:text-3xl font-heading font-semibold text-main">
                     {cfg.title}
                   </h2>
-                  <p className="text-sm text-[#94a3b8] mt-1">
-                    Target: 600-1,000+ words
-                  </p>
                 </div>
               </div>
               <div className="flex items-center gap-3">
@@ -1249,42 +1365,42 @@ export default function Form() {
             </div>
             <div className="grid grid-cols-1 gap-6">
               <TextInput
-                label="Our Origin & Founder Story"
+                label="Origin Story"
                 value={data.originStory}
                 onChange={update("originStory")}
-                placeholder="Founding background, problem identified, how the business came to life..."
+                placeholder="How the business started..."
                 multiline
                 rows={6}
               />
               <TextInput
-                label="Mission & Vision Statements"
+                label="Mission & Vision"
                 value={data.missionVision}
                 onChange={update("missionVision")}
-                placeholder="Long-term goals, ethical commitments, driving principles..."
+                placeholder="Company goals and principles..."
                 multiline
                 rows={5}
               />
               <TextInput
-                label="Our Process / Methodology"
+                label="Process"
                 value={data.process}
                 onChange={update("process")}
-                placeholder="Step-by-step breakdown of how services/products are delivered..."
+                placeholder="How you deliver your work..."
                 multiline
                 rows={5}
               />
               <TextInput
-                label="Quality Assurance & Standards"
+                label="Quality Standards"
                 value={data.qualityAssurance}
                 onChange={update("qualityAssurance")}
-                placeholder="Precision engineering, materials, certifications..."
+                placeholder="Certifications and standards..."
                 multiline
                 rows={4}
               />
               <TextInput
-                label="Community, Sustainability & Impact"
+                label="Community & Impact"
                 value={data.communityImpact}
                 onChange={update("communityImpact")}
-                placeholder="Social impact, environmental practices, community outreach..."
+                placeholder="Social and environmental impact..."
                 multiline
                 rows={4}
               />
@@ -1338,7 +1454,7 @@ export default function Form() {
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <input
                       className="field-input"
-                      placeholder="Product/Service Name"
+                      placeholder="Name"
                       value={item.name}
                       onChange={(e) =>
                         updateItem("products")(i, {
@@ -1349,7 +1465,7 @@ export default function Form() {
                     />
                     <input
                       className="field-input"
-                      placeholder="Tagline / Summary Phrase"
+                      placeholder="Tagline"
                       value={item.tagline}
                       onChange={(e) =>
                         updateItem("products")(i, {
@@ -1374,7 +1490,7 @@ export default function Form() {
                   <div className="grid grid-cols-1 sm:grid-cols-4 gap-3 mt-3">
                     <input
                       className="field-input"
-                      placeholder="Technical Specs / Inclusions"
+                      placeholder="Specs"
                       value={item.specs}
                       onChange={(e) =>
                         updateItem("products")(i, {
@@ -1385,7 +1501,7 @@ export default function Form() {
                     />
                     <input
                       className="field-input"
-                      placeholder="Pricing (e.g. $XX.XX)"
+                      placeholder="Price"
                       value={item.pricing}
                       onChange={(e) =>
                         updateItem("products")(i, {
@@ -1431,7 +1547,7 @@ export default function Form() {
                   </div>
                 </div>
               )}
-              emptyText="Add your products or services"
+              emptyText="Add products"
             />
           </div>
         );
@@ -1468,7 +1584,7 @@ export default function Form() {
                 placeholder='e.g. "Stay Ahead of the Curve"'
               />
               <TextInput
-                label="Sub-copy"
+                label="Subtext"
                 value={data.newsletterSubcopy}
                 onChange={update("newsletterSubcopy")}
                 placeholder="Select your preferences to receive updates..."
@@ -1515,7 +1631,7 @@ export default function Form() {
             </div>
             <div className="section-divider" />
             <div className="mb-6">
-              <label className="field-label">Topic / Category Filters</label>
+              <label className="field-label">Topics</label>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                 {[
                   "Product Updates & Feature Releases",
@@ -1537,9 +1653,9 @@ export default function Form() {
             </div>
             <div className="section-divider" />
             <div className="mb-6">
-              <label className="field-label">Lead Handling Preference</label>
+              <label className="field-label">Lead Handling</label>
               <p className="text-xs text-[#94a3b8] mb-3">
-                How would you like to manage submissions and leads?
+                How to manage leads?
               </p>
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                 {[
@@ -1555,7 +1671,7 @@ export default function Form() {
                   },
                   {
                     value: "view",
-                    label: "View & Export CSV",
+                    label: "View & Export",
                     desc: "Manage in the admin dashboard",
                   },
                 ].map((opt) => (
@@ -1589,8 +1705,7 @@ export default function Form() {
                 className="w-4 h-4 accent-[#003a47] mt-0.5"
               />
               <span className="text-sm text-[#1a1a2e]">
-                GDPR/CAN-SPAM compliant opt-in statement &amp; link to Privacy
-                Policy.
+                Include GDPR opt-in and Privacy Policy link.
               </span>
             </label>
           </div>
@@ -1641,7 +1756,7 @@ export default function Form() {
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <input
                       className="field-input"
-                      placeholder="Full Name"
+                      placeholder="Name"
                       value={item.name}
                       onChange={(e) =>
                         updateItem("teamMembers")(i, {
@@ -1652,7 +1767,7 @@ export default function Form() {
                     />
                     <input
                       className="field-input"
-                      placeholder="Official Title"
+                      placeholder="Title"
                       value={item.title}
                       onChange={(e) =>
                         updateItem("teamMembers")(i, {
@@ -1675,7 +1790,7 @@ export default function Form() {
                   />
                   <textarea
                     className="field-textarea mt-3"
-                    placeholder="Extended Bio (3-5 sentences)"
+                    placeholder="Bio"
                     rows={3}
                     value={item.bio}
                     onChange={(e) =>
@@ -1744,7 +1859,7 @@ export default function Form() {
                   </div>
                 </div>
               )}
-              emptyText="Add team members to display"
+              emptyText="Add team members"
             />
           </div>
         );
@@ -1775,7 +1890,7 @@ export default function Form() {
             </div>
             <div className="mb-6">
               <DynamicList
-                label="Client Testimonials"
+                label="Testimonials"
                 items={data.testimonials}
                 onAdd={() =>
                   addItem("testimonials", {
@@ -1791,7 +1906,7 @@ export default function Form() {
                   <div className="item-card">
                     <textarea
                       className="field-textarea"
-                      placeholder="Full quote"
+                      placeholder="Quote"
                       rows={3}
                       value={item.quote}
                       onChange={(e) =>
@@ -1804,7 +1919,7 @@ export default function Form() {
                     <div className="grid grid-cols-1 sm:grid-cols-4 gap-2 mt-3">
                       <input
                         className="field-input"
-                        placeholder="Client Name"
+                        placeholder="Name"
                         value={item.clientName}
                         onChange={(e) =>
                           updateItem("testimonials")(i, {
@@ -1854,12 +1969,12 @@ export default function Form() {
                     </div>
                   </div>
                 )}
-                emptyText="Add client testimonials"
+                emptyText="Add testimonials"
               />
             </div>
             <div className="section-divider" />
             <div className="mb-6">
-              <label className="field-label">Key Metrics / Data Callouts</label>
+              <label className="field-label">Key Metrics</label>
               <div className="flex flex-wrap gap-2 mb-3">
                 {(data.keyMetrics || []).map((m, i) => (
                   <span key={i} className="tag">
@@ -1928,14 +2043,14 @@ export default function Form() {
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
               <FileUpload
-                label="Brands Worked With (Logos)"
+                label="Brand Logos"
                 accept=".svg,.png"
                 multiple
                 onChange={updateFiles("brandsWorkedWith")}
                 values={files.brandsWorkedWith}
               />
               <FileUpload
-                label="Awards & Compliance Badges"
+                label="Awards & Badges"
                 accept=".svg,.png"
                 multiple
                 onChange={updateFiles("awardsBadges")}
@@ -1996,9 +2111,9 @@ export default function Form() {
                         })
                       }
                     >
-                      <option value="General">General & Onboarding</option>
-                      <option value="Pricing">Pricing & Billing</option>
-                      <option value="Technical">Technical & Support</option>
+                      <option value="General">General</option>
+                      <option value="Pricing">Pricing</option>
+                      <option value="Technical">Technical</option>
                     </select>
                     <input
                       className="field-input sm:col-span-2"
@@ -2023,7 +2138,7 @@ export default function Form() {
                   />
                 </div>
               )}
-              emptyText="Add frequently asked questions"
+              emptyText="Add FAQs"
             />
           </div>
         );
@@ -2052,30 +2167,30 @@ export default function Form() {
                 <span className="section-number">{cfg.tag}</span>
               </div>
             </div>
-            <h3 className="font-heading font-semibold text-main mb-4 text-lg flex items-center gap-2">
-              Primary Contact Channels
-            </h3>
+              <h3 className="font-heading font-semibold text-main mb-4 text-lg flex items-center gap-2">
+                Contact
+              </h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-6">
               <TextInput
-                label="Support Email"
+                label="Email"
                 value={data.supportEmail}
                 onChange={update("supportEmail")}
                 placeholder="support@example.com"
               />
               <TextInput
-                label="Phone Number (with country code)"
+                label="Phone Number"
                 value={data.phoneNumber}
                 onChange={update("phoneNumber")}
                 placeholder="+1 (555) 123-4567"
               />
             </div>
             <div className="section-divider" />
-            <h3 className="font-heading font-semibold text-main mb-4 text-lg flex items-center gap-2">
-              Physical Location
-            </h3>
+              <h3 className="font-heading font-semibold text-main mb-4 text-lg flex items-center gap-2">
+                Location
+              </h3>
             <div className="grid grid-cols-1 gap-6 mb-6">
               <TextInput
-                label="Full Street Address"
+                label="Address"
                 value={data.streetAddress}
                 onChange={update("streetAddress")}
                 placeholder="123 Main St, City, Country"
@@ -2087,7 +2202,7 @@ export default function Form() {
                 placeholder="Mon-Fri 9:00 AM - 6:00 PM"
               />
               <TextInput
-                label="Map Coordinates / Embed Code"
+                label="Map Link"
                 value={data.mapCoordinates}
                 onChange={update("mapCoordinates")}
                 placeholder="Google Maps embed URL or coordinates"
@@ -2098,11 +2213,10 @@ export default function Form() {
             <div className="section-divider" />
             <div>
               <h3 className="font-heading font-semibold text-main mb-4 text-lg flex items-center gap-2">
-                Interactive Contact Form Structure
+                Contact Form
               </h3>
               <p className="text-sm text-[#94a3b8]">
-                The form will include: Full Name, Company Email, Phone Number,
-                Subject, Message Body, Project Budget.
+                Form fields: Name, Email, Phone, Subject, Message, Budget.
               </p>
             </div>
           </div>
@@ -2140,7 +2254,7 @@ export default function Form() {
                 placeholder="2024"
               />
               <TextInput
-                label="Legal Business Name"
+                label="Legal Name"
                 value={data.legalBusinessName}
                 onChange={update("legalBusinessName")}
                 placeholder="Acme Inc."
@@ -2148,7 +2262,7 @@ export default function Form() {
             </div>
             <div className="section-divider" />
             <DynamicList
-              label="Social Network Links"
+              label="Social Links"
               items={data.socialLinks}
               onAdd={() => addItem("socialLinks", { platform: "", url: "" })}
               onRemove={removeItem("socialLinks")}
@@ -2168,7 +2282,7 @@ export default function Form() {
                     />
                     <input
                       className="field-input flex-1"
-                      placeholder="Full URL"
+                      placeholder="URL"
                       value={item.url}
                       onChange={(e) =>
                         updateItem("socialLinks")(i, {
@@ -2180,33 +2294,33 @@ export default function Form() {
                   </div>
                 </div>
               )}
-              emptyText="Add social media links (LinkedIn, X/Twitter, Instagram, etc.)"
+              emptyText="Add social links"
             />
             <div className="section-divider" />
-            <h3 className="font-heading font-semibold text-main mb-4 text-lg flex items-center gap-2">
-              Legal & Governance URLs
-            </h3>
+              <h3 className="font-heading font-semibold text-main mb-4 text-lg flex items-center gap-2">
+                Legal Links
+              </h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <TextInput
-                label="Privacy Policy URL"
+                label="Privacy Policy"
                 value={data.privacyPolicyUrl}
                 onChange={update("privacyPolicyUrl")}
                 placeholder="https://..."
               />
               <TextInput
-                label="Terms of Service URL"
+                label="Terms of Service"
                 value={data.termsUrl}
                 onChange={update("termsUrl")}
                 placeholder="https://..."
               />
               <TextInput
-                label="Cookie Policy URL"
+                label="Cookie Policy"
                 value={data.cookiePolicyUrl}
                 onChange={update("cookiePolicyUrl")}
                 placeholder="https://..."
               />
               <TextInput
-                label="Security / Status Page URL"
+                label="Security Page"
                 value={data.securityUrl}
                 onChange={update("securityUrl")}
                 placeholder="https://..."
@@ -2227,13 +2341,13 @@ export default function Form() {
             <VerifiedIcon className="w-12 h-12 text-main" />
           </div>
           <h2 className="text-3xl font-heading font-semibold text-main mb-3 animate-fade-in">
-            Submission Received
+            Submitted!
           </h2>
           <p className="text-[#1a1a2e] mb-2">
-            Thank you! Your asset collection has been submitted successfully.
+            Your submission has been received.
           </p>
           <p className="text-sm text-[#94a3b8] mb-8">
-            We&apos;ll review everything and get back to you shortly.
+            We&apos;ll review and get back to you.
           </p>
           <button
             onClick={() => {
@@ -2244,7 +2358,7 @@ export default function Form() {
             }}
             className="btn-primary"
           >
-            Submit Another
+            Submit Again
           </button>
         </div>
       </div>
@@ -2263,17 +2377,14 @@ export default function Form() {
             />
             <div>
               <h1 className="font-heading font-semibold text-xl sm:text-2xl text-main">
-                Master Operational Brief
+                Brief
               </h1>
               <p className="text-xs sm:text-sm text-[#94a3b8]">
-                Landing Page Asset &amp; Copy Checklist
+                Landing Page Checklist
               </p>
             </div>
           </div>
           <div className="text-right">
-            <p className="text-xs text-[#94a3b8] hidden sm:block">
-              A streamlined operational framework
-            </p>
             <p className="text-xs text-main font-medium mt-0.5">
               {completedCount} of {totalSections} complete
             </p>
@@ -2316,8 +2427,7 @@ export default function Form() {
       >
         <div className="text-center mb-6 sm:mb-10 px-4 sm:px-0 animate-fade-in">
           <p className="text-sm text-[#94a3b8] max-w-2xl mx-auto">
-            Collect copy, high-resolution media, and configuration
-            specifications prior to design and development execution.
+            Collect copy, media, and specs before design and development.
           </p>
         </div>
 
@@ -2362,7 +2472,7 @@ export default function Form() {
               </span>
             ) : (
               <span className="flex items-center gap-2">
-                Submit Asset Collection
+                Submit
                 <svg
                   className="w-5 h-5"
                   fill="none"
@@ -2384,7 +2494,7 @@ export default function Form() {
 
       <footer className="border-t sm:border-t-0 border-[rgba(0,58,71,0.06)] py-4 sm:py-6 text-center">
         <p className="text-xs text-[#94a3b8]">
-          Master Operational Brief &copy; {new Date().getFullYear()}
+          Brief &copy; {new Date().getFullYear()}
         </p>
       </footer>
     </div>
