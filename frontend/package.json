@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "concurrently \"node ../backend/server.js\" \"next dev\"",
+    "dev": "next dev",
     "dev:frontend": "next dev",
     "dev:backend": "node ../backend/server.js",
     "build": "next build",
