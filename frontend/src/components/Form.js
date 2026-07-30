@@ -468,6 +468,7 @@ export default function Form() {
   const [extraMedia, setExtraMedia] = useState([]);
   const [hasLogo, setHasLogo] = useState(null);
   const [wantLogoCreated, setWantLogoCreated] = useState(null);
+  const [hasColors, setHasColors] = useState(null);
   const [colorUploadMode, setColorUploadMode] = useState(false);
   const [activeSection, setActiveSection] = useState(0);
   const [submitting, setSubmitting] = useState(false);
@@ -898,131 +899,170 @@ export default function Form() {
             </div>
             <div className="section-divider" />
             <div>
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="font-heading font-semibold text-main text-lg flex items-center gap-2">
-                  Colors & Fonts
-                </h3>
-                <button
-                  type="button"
-                  onClick={addExtraColor}
-                  className="btn-ghost btn-small"
-                >
-                  <svg
-                    className="w-4 h-4"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M12 6v6m0 0v6m0-6h6m-6 0H6"
-                    />
-                  </svg>
-                  Add Color
-                </button>
-              </div>
-              <div className="mb-4">
-                <label className="check-radio cursor-pointer">
-                  <input
-                    type="radio"
-                    name="colorMode"
-                    checked={!colorUploadMode}
-                    onChange={() => setColorUploadMode(false)}
-                    className="w-4 h-4 accent-[#003a47]"
-                  />
-                  <span className="text-sm text-[#1a1a2e]">I know my color codes</span>
-                </label>
-                <label className="check-radio cursor-pointer mt-2">
-                  <input
-                    type="radio"
-                    name="colorMode"
-                    checked={colorUploadMode}
-                    onChange={() => setColorUploadMode(true)}
-                    className="w-4 h-4 accent-[#003a47]"
-                  />
-                  <span className="text-sm text-[#1a1a2e]">Upload a picture instead</span>
-                </label>
-              </div>
-              {colorUploadMode ? (
-                <FileUpload
-                  label="Upload a reference image"
-                  accept="image/*"
-                  onChange={updateFiles("colorReferenceImage")}
-                  values={files.colorReferenceImage}
-                />
-              ) : (
-                <>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                    <ColorInput
-                      label="Primary Color"
-                      value={data.primaryAccent}
-                      onChange={update("primaryAccent")}
-                    />
-                    <ColorInput
-                      label="Secondary Color"
-                      value={data.secondaryAccent}
-                      onChange={update("secondaryAccent")}
-                    />
-                    <ColorInput
-                      label="Neutral BG"
-                      value={data.neutralBg}
-                      onChange={update("neutralBg")}
-                    />
-                    <ColorInput
-                      label="Text Color"
-                      value={data.textColor}
-                      onChange={update("textColor")}
-                    />
+              <h3 className="font-heading font-semibold text-main text-lg flex items-center gap-2 mb-4">
+                Does your business have any colors?
+              </h3>
+              {hasColors === null && (
+                <div className="p-5 rounded-lg bg-[#f8fafb] border border-[rgba(0,58,71,0.08)]">
+                  <p className="text-sm text-[#1a1a2e] font-medium mb-3">
+                    Do your business have any colors? If yes, then you can now choose if you know the colors or have an image of the colors.
+                  </p>
+                  <div className="flex gap-3">
+                    <button
+                      type="button"
+                      onClick={() => setHasColors(true)}
+                      className="btn-primary btn-small"
+                    >
+                      Yes
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setHasColors(false)}
+                      className="btn-ghost btn-small"
+                    >
+                      No
+                    </button>
                   </div>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mt-4">
-                    <TextInput
-                      label="Heading Font"
-                      value={data.headingFont}
-                      onChange={update("headingFont")}
-                      placeholder="e.g. Outfit, Syne, Space Grotesk"
-                    />
-                    <TextInput
-                      label="Body Font"
-                      value={data.bodyFont}
-                      onChange={update("bodyFont")}
-                      placeholder="e.g. Inter, DM Sans"
-                    />
+                </div>
+              )}
+              {hasColors === true && (
+                <div>
+                  <div className="flex items-center justify-between mb-4">
+                    <p className="text-sm text-[#94a3b8]">
+                      Select how you want to provide your colors
+                    </p>
+                    <button
+                      type="button"
+                      onClick={() => { setHasColors(null); setColorUploadMode(false); }}
+                      className="text-xs text-[#94a3b8] hover:text-main underline"
+                    >
+                      Change answer
+                    </button>
                   </div>
-                  {extraColors.length > 0 && (
-                    <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                      {extraColors.map((c, i) => (
-                        <div key={i} className="relative animate-fade-in">
-                          <button
-                            type="button"
-                            onClick={() => removeExtraColor(i)}
-                            className="absolute -top-2 -right-2 z-10 w-5 h-5 bg-red-400 hover:bg-red-600 text-white rounded-full flex items-center justify-center transition-colors"
+                  <div className="mb-4">
+                    <label className="check-radio cursor-pointer">
+                      <input
+                        type="radio"
+                        name="colorMode"
+                        checked={!colorUploadMode}
+                        onChange={() => setColorUploadMode(false)}
+                        className="w-4 h-4 accent-[#003a47]"
+                      />
+                      <span className="text-sm text-[#1a1a2e]">I know my color codes</span>
+                    </label>
+                    <label className="check-radio cursor-pointer mt-2">
+                      <input
+                        type="radio"
+                        name="colorMode"
+                        checked={colorUploadMode}
+                        onChange={() => setColorUploadMode(true)}
+                        className="w-4 h-4 accent-[#003a47]"
+                      />
+                      <span className="text-sm text-[#1a1a2e]">Upload a picture instead</span>
+                    </label>
+                  </div>
+                  {colorUploadMode ? (
+                    <FileUpload
+                      label="Upload a reference image"
+                      accept="image/*"
+                      onChange={updateFiles("colorReferenceImage")}
+                      values={files.colorReferenceImage}
+                    />
+                  ) : (
+                    <div className="space-y-4">
+                      <div className="flex items-center justify-between">
+                        <button
+                          type="button"
+                          onClick={addExtraColor}
+                          className="btn-ghost btn-small"
+                        >
+                          <svg
+                            className="w-4 h-4"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
                           >
-                            <svg
-                              className="w-3 h-3"
-                              fill="none"
-                              stroke="currentColor"
-                              viewBox="0 0 24 24"
-                            >
-                              <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth={2}
-                                d="M6 18L18 6M6 6l12 12"
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M12 6v6m0 0v6m0-6h6m-6 0H6"
+                            />
+                          </svg>
+                          Add Color
+                        </button>
+                      </div>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                        <ColorInput
+                          label="Primary Color"
+                          value={data.primaryAccent}
+                          onChange={update("primaryAccent")}
+                        />
+                        <ColorInput
+                          label="Secondary Color"
+                          value={data.secondaryAccent}
+                          onChange={update("secondaryAccent")}
+                        />
+                        <ColorInput
+                          label="Neutral BG"
+                          value={data.neutralBg}
+                          onChange={update("neutralBg")}
+                        />
+                        <ColorInput
+                          label="Text Color"
+                          value={data.textColor}
+                          onChange={update("textColor")}
+                        />
+                      </div>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                        <TextInput
+                          label="Heading Font"
+                          value={data.headingFont}
+                          onChange={update("headingFont")}
+                          placeholder="e.g. Outfit, Syne, Space Grotesk"
+                        />
+                        <TextInput
+                          label="Body Font"
+                          value={data.bodyFont}
+                          onChange={update("bodyFont")}
+                          placeholder="e.g. Inter, DM Sans"
+                        />
+                      </div>
+                      {extraColors.length > 0 && (
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                          {extraColors.map((c, i) => (
+                            <div key={i} className="relative animate-fade-in">
+                              <button
+                                type="button"
+                                onClick={() => removeExtraColor(i)}
+                                className="absolute -top-2 -right-2 z-10 w-5 h-5 bg-red-400 hover:bg-red-600 text-white rounded-full flex items-center justify-center transition-colors"
+                              >
+                                <svg
+                                  className="w-3 h-3"
+                                  fill="none"
+                                  stroke="currentColor"
+                                  viewBox="0 0 24 24"
+                                >
+                                  <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth={2}
+                                    d="M6 18L18 6M6 6l12 12"
+                                  />
+                                </svg>
+                              </button>
+                              <ColorInput
+                                label={`Custom Color ${i + 1}`}
+                                value={c}
+                                onChange={updateExtraColor(i)}
                               />
-                            </svg>
-                          </button>
-                          <ColorInput
-                            label={`Custom Color ${i + 1}`}
-                            value={c}
-                            onChange={updateExtraColor(i)}
-                          />
+                            </div>
+                          ))}
                         </div>
-                      ))}
+                      )}
                     </div>
                   )}
-                </>
+                </div>
               )}
             </div>
             <div className="section-divider" />
@@ -1072,6 +1112,7 @@ export default function Form() {
                   multiple
                   onChange={updateFiles("partnerLogos")}
                   values={files.partnerLogos}
+                  className="hidden"
                 />
               </div>
               {extraMedia.map((_, i) => (
@@ -1118,6 +1159,7 @@ export default function Form() {
                       multiple
                       onChange={updateFiles(`extraMedia_${i}_logos`)}
                       values={files[`extraMedia_${i}_logos`]}
+                      className="hidden"
                     />
                   </div>
                 </div>
@@ -1263,7 +1305,7 @@ export default function Form() {
               </div>
             </div>
             <TextInput
-              label="Elevator Pitch"
+              label="Company Overview"
               value={data.elevatorPitch}
               onChange={update("elevatorPitch")}
               placeholder="Business mission and market focus..."
